@@ -1,0 +1,2 @@
+class SarcasticError:
+    pass
