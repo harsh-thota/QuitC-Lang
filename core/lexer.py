@@ -7,7 +7,7 @@ from typing import List
 VALID_EMOJIS = ["🤡", "💀", "😈", "😂", "😵", "🫠", "👻", "😒"]
 
 
-KEYWORDS = {"int", "string", "print", "return", "try", "catch"}
+KEYWORDS = {"int", "string", "print", "return", "try", "catch", "return", "function"}
 OPERATORS = {"+", "-", "*", "/", "=", "==", "!=", "<", ">", "<=", ">="}
 SYMBOLS = {"(", ")", "{", "}", ",", ";"}
 

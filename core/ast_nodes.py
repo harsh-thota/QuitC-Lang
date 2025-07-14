@@ -53,3 +53,7 @@ class TryCatch(ASTNode):
 @dataclass
 class Program(ASTNode):
     statements: List[ASTNode]
+
+@dataclass
+class Return(ASTNode):
+    value: ASTNode

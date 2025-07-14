@@ -1,5 +1,6 @@
 from lexer import Token
 from ast_nodes import (
+    ASTNode,
     Program, 
     VarDeclaration, 
     Assignment, 
@@ -8,7 +9,8 @@ from ast_nodes import (
     BinaryOp, 
     FunctionCall, 
     FunctionDef, 
-    PrintStatement
+    PrintStatement,
+    Return,
     )
 from errors import SarcasticError
 
@@ -27,23 +29,23 @@ class Parser:
         return Program(statements=statements)
     
     def _parse_statement(self):
-        if self._match("KEYWORD", "int") or self._match("KEYWORD", "string"):
+        if self._match("KEYWORD", "function"):
+                return self._parse_function_def()
+        elif self._match("KEYWORD", "int") or self._match("KEYWORD", "string"):
             return self._parse_var_declaration()
         elif self._match("KEYWORD", "print"):
             return self._parse_print()
+        elif self._peek().type == "IDENTIFIER" and self._peek(1).value == "=":
+            return self._parse_assignment()
         elif self._match("KEYWORD", "return"):
-            self._consume()
-            expr = self._parse_expression()
-            return expr
-        elif self._match("KEYWORD", "function"):
-            return self._parse_function_def()
+            return self._parse_return()
         else:
             return self._parse_expression()
         
     def _parse_var_declaration(self):
         var_type = self._previous().value
         name = self._consume("IDENTIFIER").value
-        self._consume("OPERATION", "=")
+        self._consume("OPERATOR", "=")
         value = self._parse_expression()
         return VarDeclaration(var_type, name, value)
     
@@ -60,8 +62,32 @@ class Parser:
         return PrintStatement(value)
     
     def _parse_function_def(self):
-        # raise SarcasticError("unsupported error", "Function declaration not supported yet")
-        pass
+        return_type = self._consume("KEYWORD").value
+        name = self._consume("IDENTIFIER").value
+        self._consume("SYMBOL", "(")
+
+        params = []
+        if not self._check("SYMBOL", ")"):
+            params.append(self._consume("IDENTIFIER").value)
+            while self._match("SYMBOL", ","):
+                params.append(self._consume("IDENTIFIER").value)
+        self._consume("SYMBOL", ")")
+
+        body = self._parse_block()
+        return FunctionDef(return_type, name, params, body)
+    
+    def _parse_return(self):
+        value = self._parse_expression()
+        return Return(value)
+    
+    def _parse_block(self) -> List[ASTNode]:
+        self._consume("SYMBOL", "{")
+        statements = []
+        while not self._check("SYMBOL", "}"):
+            stmt = self._parse_statement()
+            statements.append(stmt)
+        self._consume("SYMBOL", "}")
+        return statements
 
     def _parse_expression(self):
         return self._parse_binary_op()
@@ -92,7 +118,7 @@ class Parser:
                 self._advance()
                 return Variable(token.value)
         
-        # raise SarcasticError("unexpected_token", token.value, token.line)
+        raise SarcasticError("unexpected_token", token.value, token.line)
     
     def _parse_function_call(self):
         name = self._consume("IDENTIFIER").value
@@ -100,9 +126,9 @@ class Parser:
         args = []
 
         if not self._check("SYMBOL", ")"):
-            args.append(self._parse_expression)
+            args.append(self._parse_expression())
             while self._match("SYMBOL", ","):
-                args.append(self._parse_expression)
+                args.append(self._parse_expression())
 
         self._consume("SYMBOL", ")")
         return FunctionCall(name, args)
@@ -119,10 +145,10 @@ class Parser:
         self._advance()
         return True
     
-    def _check(self, expected_type, expected_value = None):
-        if self._is_at_end():
+    def _check(self, expected_type, expected_value = None, offset=0):
+        if self.pos + offset >= len(self.tokens):
             return False
-        token = self._peek()
+        token = self.tokens[self.pos + offset]
         if token.type != expected_type:
             return False
         if expected_value is not None and token.value != expected_value:
@@ -132,15 +158,15 @@ class Parser:
     
     def _consume(self, expected_type = None, expected_value = None):
         if self._is_at_end():
-            # raise SarcasticError("unexpected_eof", None, self._peek().line)
+            raise SarcasticError("unexpected_eof", None, self._peek().line)
             pass
         
         token = self._peek()
         if expected_type and token.type != expected_type:
-            # raise SarcasticError("expected_token", expected_type, token.line)
+            raise SarcasticError("expected_token", expected_type, token.line)
             pass
         if expected_value and token.value != expected_value:
-            # raise SarcasticError("expected_value", expected_value, token.line)
+            raise SarcasticError("expected_value", expected_value, token.line)
             pass
         
         return self._advance()
