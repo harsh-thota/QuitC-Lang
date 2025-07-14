@@ -11,6 +11,7 @@ from ast_nodes import (
     FunctionDef, 
     PrintStatement,
     Return,
+    IfElse
     )
 from errors import SarcasticError
 
@@ -39,6 +40,8 @@ class Parser:
             return self._parse_assignment()
         elif self._match("KEYWORD", "return"):
             return self._parse_return()
+        elif self._match("KEYWORD", "if"):
+            return self._parse_if_else()
         else:
             return self._parse_expression()
         
@@ -79,6 +82,19 @@ class Parser:
     def _parse_return(self):
         value = self._parse_expression()
         return Return(value)
+    
+    def _parse_if_else(self):
+        self._consume("SYMBOL", "(")
+        condition = self._parse_expression()
+        self._consume("SYMBOL", ")")
+
+        then_branch = self._parse_block()
+        else_branch = None
+
+        if self._match("KEYWORD", "else"):
+            else_branch = self._parse_block()
+        
+        return IfElse(condition, then_branch, else_branch)
     
     def _parse_block(self) -> List[ASTNode]:
         self._consume("SYMBOL", "{")

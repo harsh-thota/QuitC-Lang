@@ -11,11 +11,19 @@ function int double(n) {
   return n * 2 🤡 // double it
 }
 
-int result = double(4) 💀 // should be 8
+int result = double(4) 🤡 // should be 8
 print(result) 😂 // print 8
+
+int z = 5 🤡 // test value
+if (z > 3) {
+  print("yes") 😂 //yep, it's true
+} else {
+  print("no") 😭 //no, its not!
+}
 """
 
 print("=== TOKENIZING ===")
+tokens = []
 try:
     tokens = Token.tokenize(source_code)
     print(f"Generated {len(tokens)} tokens:")

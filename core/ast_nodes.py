@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Any
+from typing import List, Any, Optional
 
 class ASTNode:
     pass
@@ -57,3 +57,9 @@ class Program(ASTNode):
 @dataclass
 class Return(ASTNode):
     value: ASTNode
+
+@dataclass
+class IfElse(ASTNode):
+    condition: ASTNode
+    then_branch: List[ASTNode]
+    else_branch: Optional[List[ASTNode]] = None

@@ -41,6 +41,14 @@ class Interpreter:
         elif isinstance(node, Return):
             value = self._eval(node.value)
             raise ReturnException(value)
+        elif isinstance(node, IfElse):
+            condition_value = self._eval(node.condition)
+            if condition_value:
+                for stmt in node.then_branch:
+                    self._eval(stmt)
+            elif node.else_branch:
+                for stmt in node.else_branch:
+                    self._eval(stmt)
         else:
             raise SarcasticError("unsupported_ast", str(type(node)))
 
