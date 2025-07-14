@@ -1,18 +1,5 @@
 from lexer import Token
-from ast_nodes import (
-    ASTNode,
-    Program, 
-    VarDeclaration, 
-    Assignment, 
-    Literal, 
-    Variable, 
-    BinaryOp, 
-    FunctionCall, 
-    FunctionDef, 
-    PrintStatement,
-    Return,
-    IfElse
-    )
+from ast_nodes import *
 from errors import SarcasticError
 
 from typing import List
@@ -42,6 +29,12 @@ class Parser:
             return self._parse_return()
         elif self._match("KEYWORD", "if"):
             return self._parse_if_else()
+        elif self._match("KEYWORD", "try"):
+            return self._parse_try_catch()
+        elif self._match("KEYWORD", "while"):
+            return self._parse_while()
+        elif self._match("KEYWORD", "try"):
+            return self._parse_try_catch()
         else:
             return self._parse_expression()
         
@@ -96,6 +89,13 @@ class Parser:
         
         return IfElse(condition, then_branch, else_branch)
     
+    def _parse_while(self):
+        self._consume("SYMBOL", "(")
+        condition = self._parse_expression()
+        self._consume("SYMBOL", ")")
+        body = self._parse_block()
+        return WhileLoop(condition, body)
+    
     def _parse_block(self) -> List[ASTNode]:
         self._consume("SYMBOL", "{")
         statements = []
@@ -104,12 +104,28 @@ class Parser:
             statements.append(stmt)
         self._consume("SYMBOL", "}")
         return statements
+    
+    def _parse_try_catch(self) -> TryCatch:
+        try_body = self._parse_block()
+        if not self._match("KEYWORD", "catch"):
+            current = self._peek()
+            raise SarcasticError("expected_token", "catch", current.line)
+        catch_body = self._parse_block()
+        return TryCatch(try_body=try_body, catch_body=catch_body)
+    
+    def _parse_unary(self):
+        token = self._peek()
+        if token.type == "OPERATOR" and token.value in ("-", "!"):
+            operator = self._advance().value
+            operand = self._parse_unary()
+            return UnaryOp(operator, operand)
+        return self._parse_primary()
 
     def _parse_expression(self):
         return self._parse_binary_op()
     
     def _parse_binary_op(self):
-        expr = self._parse_primary()
+        expr = self._parse_unary()
         while self._match("OPERATOR"):
             operator = self._previous().value
             right = self._parse_primary()

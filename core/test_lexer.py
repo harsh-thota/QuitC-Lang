@@ -4,15 +4,15 @@ from parser import Parser
 from interpreter import Interpreter
 
 source_code = """
-int x = 5 🤡 // declare x
-print(x) 😂 // show x
+/*int x = 5 🤡*/ // declare x
+/*print(x) 😂 // show x
 
 function int double(n) {
   return n * 2 🤡 // double it
 }
 
 int result = double(4) 🤡 // should be 8
-print(result) 😂 // print 8
+print(result) 😂 // print 8*/
 
 int z = 5 🤡 // test value
 if (z > 3) {
@@ -20,6 +20,30 @@ if (z > 3) {
 } else {
   print("no") 😭 //no, its not!
 }
+
+int i = 0 🤡 // initialize
+
+while (i < 3) {
+  print(i) 😂 // print i
+  i = i + 1 🤡 // increment
+}
+
+try {
+  print("trying...") 😂 //tryingggg
+  int oops = 5 / 0 🤡 // will crash
+  print("you won't see this") 😈 //will i see this?
+} catch {
+  print("nice try") 💀 //nice try
+}
+
+int o = -5 🤡 // test negation
+print(o) 😂 //forget comment
+
+int p = 0 🤡//
+if (!p) {
+    print("zero is falsy") 😂//forget comment?
+}
+
 """
 
 print("=== TOKENIZING ===")

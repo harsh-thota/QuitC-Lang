@@ -12,7 +12,7 @@ class SarcasticError(Exception):
     def _format_message(self):
         msg = get_sarcastic_message(self.error_type)
         if self.context:
-            msg += f"[Context: {self.context}]"
+            msg += f" [Context: {self.context}]"
         if self.line is not None:
             msg = f"[LINE {self.line}] " + msg
 

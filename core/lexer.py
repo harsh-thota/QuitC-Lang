@@ -7,8 +7,8 @@ from typing import List
 VALID_EMOJIS = ["🤡", "💀", "😈", "😂", "😵", "🫠", "👻", "😒", "😭"]
 
 
-KEYWORDS = {"int", "string", "print", "return", "try", "catch", "function", "if", "else", "while"}
-OPERATORS = {"+", "-", "*", "/", "=", "==", "!=", "<", ">", "<=", ">="}
+KEYWORDS = {"int", "string", "print", "return", "try", "catch", "function", "if", "else", "while", "try", "catch", "true", "false"}
+OPERATORS = {"+", "-", "*", "/", "=", "==", "!=", "<", ">", "<=", ">=", "&&", "||", "!"}
 SYMBOLS = {"(", ")", "{", "}", ",", ";"}
 
 @dataclass
@@ -18,6 +18,13 @@ class Token:
     line: int
 
     def tokenize(source_code: str) -> List["Token"]:
+        open_count = source_code.count('/*')
+        close_count = source_code.count('*/')
+        if open_count > close_count:
+            pos = source_code.rfind('/*')
+            line_num = source_code[:pos].count('\n') + 1
+            raise SarcasticError("unterminated_block_comment", line=line_num)
+        source_code = re.sub(r'/\*.*?\*/', '', source_code, flags=re.DOTALL)
         tokens = []
         lines = source_code.splitlines()
 
@@ -52,7 +59,7 @@ class Token:
                 line = re.split(r"//", line)[0]
 
             line = re.sub(rf"{'|'.join(re.escape(e) for e in VALID_EMOJIS)}", "", line).strip()
-            words = re.findall(r'"[^"]*"|[A-Za-z_]\w*|\d+|==|!=|<=|>=|[+\-*/=<>(),{};]', line)
+            words = re.findall(r'"[^"]*"|==|!=|<=|>=|&&|\|\||[+\-*/=<>!(),{};]|[A-Za-z_]\w*|\d+', line)
 
             for word in words:
                 if word in KEYWORDS:
@@ -67,6 +74,12 @@ class Token:
                     token_type = "STRING"
                 elif re.match(r'[A-Za-z_]\w*', word):
                     token_type = "IDENTIFIER"
+                elif word == "true":
+                    token_type = "BOOLEAN"
+                    word = True
+                elif word == "false":
+                    token_type = "BOOLEAN"
+                    word = False
                 else:
                     raise SarcasticError("unknown_token", word, line_num)
 

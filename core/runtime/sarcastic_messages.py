@@ -68,6 +68,12 @@ MESSAGES = {
     "unsupported": [
         "Yeah... I'm not doing that yet",
         "Functionality coming soon. Maybe. Probably not"
+    ],
+    "missing_catch": [
+        "You forgot the 'catch'. Whats the point of trying if you never catch?"
+    ],
+    "unterminated_block_comment": [
+        "So you expect me to somehow find the missing block comment?"
     ]
 }
 

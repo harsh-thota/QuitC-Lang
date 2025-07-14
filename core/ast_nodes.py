@@ -63,3 +63,18 @@ class IfElse(ASTNode):
     condition: ASTNode
     then_branch: List[ASTNode]
     else_branch: Optional[List[ASTNode]] = None
+
+@dataclass
+class WhileLoop(ASTNode):
+    condition: ASTNode
+    body: List[ASTNode]
+
+@dataclass
+class TryCatch(ASTNode):
+    try_body: List[ASTNode]
+    catch_body: List[ASTNode]
+
+@dataclass
+class UnaryOp(ASTNode):
+    operator: str
+    operand: ASTNode

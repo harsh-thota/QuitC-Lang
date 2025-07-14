@@ -49,6 +49,19 @@ class Interpreter:
             elif node.else_branch:
                 for stmt in node.else_branch:
                     self._eval(stmt)
+        elif isinstance(node, WhileLoop):
+            while self._eval(node.condition):
+                for stmt in node.body:
+                    self._eval(stmt)
+        elif isinstance(node, TryCatch):
+            try:
+                for stmt in node.try_body:
+                    self._eval(stmt)
+            except Exception:
+                for stmt in node.catch_body:
+                    self._eval(stmt)
+        elif isinstance(node, UnaryOp):
+            return self._eval_unary(node)
         else:
             raise SarcasticError("unsupported_ast", str(type(node)))
 
@@ -82,12 +95,22 @@ class Interpreter:
                 return left <= right
             elif op == ">=":
                 return left >= right
+            elif op == "&&":
+                return bool(left) and bool(right)
+            elif op == "||":
+                return bool(left) or bool(right)
             else:
                 raise SarcasticError("unknown_operator", op)
-                pass
         except Exception:
             raise SarcasticError("bad_math")
-            pass
+        
+    def _eval_unary(self, node: UnaryOp):
+        operand = self._eval(node.operand)
+        if node.operator == "-":
+            return -operand
+        if node.operator == "!":
+            return not operand
+        raise SarcasticError("unknown_operator", node.operator)
 
     def _maybe_reverse_operator(self, op: str) -> str:
         if random.random() < 0.25:
