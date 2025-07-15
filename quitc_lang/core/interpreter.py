@@ -1,9 +1,9 @@
 import time
 import random
 
-from ast_nodes import *
-from env import Environment
-from errors import SarcasticError
+from quitc_lang.core.ast_nodes import *
+from quitc_lang.core.env import Environment
+from quitc_lang.core.errors import SarcasticError
 
 class ReturnException(Exception):
     def __init__(self, value):

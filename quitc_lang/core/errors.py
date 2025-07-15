@@ -1,4 +1,4 @@
-from runtime.sarcastic_messages import get_sarcastic_message
+from quitc_lang.core.runtime.sarcastic_messages import get_sarcastic_message
 
 class SarcasticError(Exception):
 

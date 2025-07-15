@@ -1,5 +1,5 @@
 import re
-from errors import SarcasticError
+from quitc_lang.core.errors import SarcasticError
 from dataclasses import dataclass
 from typing import List
 

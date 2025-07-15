@@ -1,6 +1,6 @@
-from lexer import Token
-from ast_nodes import *
-from errors import SarcasticError
+from quitc_lang.core.lexer import Token
+from quitc_lang.core.ast_nodes import *
+from quitc_lang.core.errors import SarcasticError
 
 from typing import List
 
@@ -29,8 +29,6 @@ class Parser:
             return self._parse_return()
         elif self._match("KEYWORD", "if"):
             return self._parse_if_else()
-        elif self._match("KEYWORD", "try"):
-            return self._parse_try_catch()
         elif self._match("KEYWORD", "while"):
             return self._parse_while()
         elif self._match("KEYWORD", "try"):

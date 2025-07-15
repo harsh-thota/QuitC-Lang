@@ -1,4 +1,4 @@
-from errors import SarcasticError
+from quitc_lang.core.errors import SarcasticError
 
 class Environment:
     MAX_VARIABLES = 5
