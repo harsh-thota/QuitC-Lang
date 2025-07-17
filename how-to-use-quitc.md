@@ -1,10 +1,6 @@
----
-
 # QuitC Language Guide
 
 > The programming language that trolls you when you mess up, and only respects emoji-terminated lines 😈
-
----
 
 ## Basic Rules
 
