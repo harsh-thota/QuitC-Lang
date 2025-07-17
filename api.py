@@ -42,10 +42,8 @@ async def run_code(request: CodeRequest):
         sys.stdout = old_stdout
         return {"success": False, "error": f"Unexpected error: {e}"}
     finally:
-        # restore stdout no matter what
         sys.stdout = old_stdout
-
-    # strip ANSI escape sequences (Rich color codes) for clean frontend display
+        
     import re
     raw = buf.getvalue()
     clean = re.sub(r'\x1b\[[0-9;]*m', '', raw)
