@@ -7,7 +7,9 @@ readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
     "typer>=0.14.0",
-    "rich>=13.0.0"
+    "rich>=13.0.0",
+    "fastapi>=0.115.0",
+    "uvicorn>=0.33.0",
 ]
 
 [project.scripts]
@@ -16,3 +18,7 @@ quitc = "quitc_lang.cli:app"
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["quitc_lang*"]
+exclude = ["core", "web"]
