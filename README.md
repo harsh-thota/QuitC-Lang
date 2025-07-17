@@ -52,6 +52,7 @@ quitc-lang/
 │       └── demo.qc
 ├── pyproject.toml
 ├── .gitignore
+├── requirements.txt
 └── README.md
 ```
 
