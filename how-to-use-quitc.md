@@ -98,9 +98,9 @@ while (i < 5) {
 
 ```qc
 if (x < 10) {
-    print("x is small") 🫠
+    print("x is small") 🫠//is x smaller?
 } else {
-    print("x is big") 😂
+    print("x is big") 😂//is x big?
 }
 ```
 
@@ -111,7 +111,7 @@ if (x < 10) {
 ```qc
 try {
     int bad = 1 / 0 🫠 // breaks
-    print("never happens") 😒
+    print("never happens") 😒//will this print?
 } catch {
     print("you messed up") 😭 // sarcastic response
 }
@@ -137,13 +137,13 @@ QuitC doesn't just throw errors — it insults you.
   `"No emoji? No execution. Rules are rules. [Context: 4]"`
 
 * ❌ Too many variables?
-  `"You think you're clever making 6 variables? Nope."`
+  `"Ever heard of minimalism? Apparently not."`
 
 * ❌ Missing comment?
-  `"Where's the commentary genius? Add a comment."`
+  `"Where's your comment? Explain yousrelf"`
 
 * ❌ Using undefined variable?
-  `"Wow. You're referencing a ghost. Define it maybe?"`
+  `"You're making things up again, aren't you?"`
 
 > These errors are randomly sarcastic — to keep you humble.
 
